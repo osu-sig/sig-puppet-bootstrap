@@ -28,7 +28,7 @@ file { '/etc/profile.d/proxy.sh':
 }
 
 exec { 'get build_corkscrew script':
-    command     => '/usr/bin/wget https://gist.github.com/stacybrock/17b6c67be10a72b45d20/raw/2894da3800cfc45c1b4a5dce61e2ca26e98612f6/build_corkscrew.sh',
+    command     => '/usr/bin/wget https://raw.githubusercontent.com/osu-sig/sig-puppet-bootstrap/master/build_corkscrew.sh',
     cwd         => '/root',
     environment => "https_proxy=https://${proxy_host}:$proxy_port",
     creates     => '/root/build_corkscrew.sh',

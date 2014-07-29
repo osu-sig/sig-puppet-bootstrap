@@ -8,6 +8,6 @@ Requires Puppet 3. Tested only on Centos6 for now.
 
 Copy `bootstrap.pp` onto the server.
 
-```bash
+```
 [root@somebox ~]# puppet apply bootstrap.pp
 ```
