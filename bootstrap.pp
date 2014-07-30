@@ -81,13 +81,34 @@ sshkey { 'github':
     type   => 'ssh-rsa',
 }
 
-# TODO: add newly-created ssh key to github authorized keys
+exec { 'get push_ssh_key script':
+    command     => '/usr/bin/wget https://raw.githubusercontent.com/osu-sig/sig-puppet-bootstrap/master/push_ssh_key.sh',
+    cwd         => '/root',
+    environment => "https_proxy=https://${proxy_host}:$proxy_port",
+    creates     => '/root/push_ssh_key.sh',
+    require     => [ Package['wget'] ],
+    before      => File['/root/push_ssh_key.sh'],
+}
+
+file { '/root/push_ssh_key.sh':
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0700',
+}
+
+exec { 'push ssh key to github':
+    command     => '/root/push_ssh_key.sh',
+    cwd         => '/root',
+    environment => "https_proxy=https://${proxy_host}:$proxy_port",
+    require     => [ Exec['get push_ssh_key script'], Exec['create ssh key'] ],
+}
 
 exec { 'clone sig-puppet git repo':
     command => '/usr/bin/git clone git@github.com:osu-sig/sig-puppet.git puppet',
     cwd     => '/opt',
     creates => '/opt/puppet/README.md',
-    require => [ Exec['create ssh key'], Exec['build corkscrew'], Package['git'] ],
+    require => [ Exec['push ssh key to github'], Exec['build corkscrew'], Package['git'] ],
 }
 
 exec { 'git submodule init':

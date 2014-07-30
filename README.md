@@ -9,5 +9,6 @@ Requires Puppet 3. Tested only on Centos6 for now.
 Copy `bootstrap.pp` onto the server.
 
 ```
+[root@somebox ~]# export GITHUB_TOKEN=change_this_to_correct_token
 [root@somebox ~]# puppet apply bootstrap.pp
 ```
